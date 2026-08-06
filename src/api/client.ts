@@ -2,9 +2,21 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export async function apiFetch<T>(
   path: string,
-  options: RequestInit = {}
+  options: RequestInit = {},
+  params?: Record<string, string | number | (string | number)[]>
 ): Promise<T> {
   const token = localStorage.getItem("token");
+
+  const url = new URL(`${API_BASE_URL}${path}`);
+  if (params) {
+    Object.entries(params).forEach(([key, value]) => {
+      if (Array.isArray(value)) {
+        value.forEach((v) => url.searchParams.append(key, String(v)));
+      } else {
+        url.searchParams.append(key, String(value));
+      }
+    });
+  }
 
   const headers: HeadersInit = {
     "Content-Type": "application/json",
@@ -12,10 +24,7 @@ export async function apiFetch<T>(
     ...options.headers,
   };
 
-  const response = await fetch(`${API_BASE_URL}${path}`, {
-    ...options,
-    headers,
-  });
+  const response = await fetch(url.toString(), { ...options, headers });
 
   if (!response.ok) {
     const errorBody = await response.json().catch(() => null);
