@@ -31,15 +31,15 @@ function ProblemsList() {
 
   useEffect(() => {
     apiFetch<Problem[]>("/problems")
-      .then((data) => setProblems(data))
-      .catch((err) => setError((err as Error).message))
-      .finally(() => setLoading(false));
+        .then((data) => setProblems(data))
+        .catch((err) => setError((err as Error).message))
+        .finally(() => setLoading(false));
   }, []);
 
   async function handleDelete(problemId: number) {
     setError(null);
     try {
-      await apiFetch(`/problems/${problemId}`, { method: "DELETE" });
+      await apiFetch(`/problems/${problemId}`, {method: "DELETE"});
       setProblems((prev) => prev.filter((p) => p.id !== problemId));
     } catch (err) {
       setError((err as Error).message);
@@ -47,6 +47,7 @@ function ProblemsList() {
   }
 
   function startEdit(problem: Problem) {
+    setError(null);
     setEditingId(problem.id);
     setEditTitle(problem.title);
     setEditUrl(problem.url);
@@ -70,7 +71,7 @@ function ProblemsList() {
         }),
       });
       setProblems((prev) =>
-        prev.map((p) => (p.id === problemId ? { ...p, ...updated } : p))
+          prev.map((p) => (p.id === problemId ? {...p, ...updated} : p))
       );
       setEditingId(null);
     } catch (err) {
@@ -79,34 +80,34 @@ function ProblemsList() {
   }
 
   if (loading) return <p>Loading...</p>;
-  if (error) return <p style={{ color: "red" }}>{error}</p>;
 
   return (
-    <ul>
-      {problems.map((problem) => (
-        <li key={problem.id}>
-          {editingId === problem.id ? (
-            <form onSubmit={(e) => handleEditSubmit(e, problem.id)}>
-              <input type="text" value={editTitle} onChange={(e) => setEditTitle(e.target.value)} />
-              <input type="text" value={editUrl} onChange={(e) => setEditUrl(e.target.value)} />
-              <select value={editDifficulty} onChange={(e) => setEditDifficulty(e.target.value)}>
-                <option value="easy">Easy</option>
-                <option value="medium">Medium</option>
-                <option value="hard">Hard</option>
-              </select>
-              <button type="submit">Save</button>
-              <button type="button" onClick={cancelEdit}>Cancel</button>
-            </form>
-          ) : (
-            <>
-              {problem.title} — {problem.difficulty}
-              <button type="button" onClick={() => startEdit(problem)}>Edit</button>
-              <button type="button" onClick={() => handleDelete(problem.id)}>Delete</button>
-            </>
-          )}
-        </li>
-      ))}
-    </ul>
+      <ul>
+        {problems.map((problem) => (
+            <li key={problem.id}>
+              {editingId === problem.id ? (
+                  <form onSubmit={(e) => handleEditSubmit(e, problem.id)}>
+                    <input type="text" value={editTitle} onChange={(e) => setEditTitle(e.target.value)}/>
+                    <input type="text" value={editUrl} onChange={(e) => setEditUrl(e.target.value)}/>
+                    <select value={editDifficulty} onChange={(e) => setEditDifficulty(e.target.value)}>
+                      <option value="easy">Easy</option>
+                      <option value="medium">Medium</option>
+                      <option value="hard">Hard</option>
+                    </select>
+                    <button type="submit">Save</button>
+                    <button type="button" onClick={cancelEdit}>Cancel</button>
+                    {error && <p style={{color: "red"}}>{error}</p>}
+                  </form>
+              ) : (
+                  <>
+                    {problem.title} — {problem.difficulty}
+                    <button type="button" onClick={() => startEdit(problem)}>Edit</button>
+                    <button type="button" onClick={() => handleDelete(problem.id)}>Delete</button>
+                  </>
+              )}
+            </li>
+        ))}
+      </ul>
   );
 }
 
