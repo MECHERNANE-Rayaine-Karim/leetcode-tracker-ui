@@ -21,6 +21,7 @@ function ProblemsList() {
   const [error, setError] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editingTopicsId, setEditingTopicsId] = useState<number | null>(null);
+  const [draftTopicIds, setDraftTopicIds] = useState<Set<number>>(new Set());
   const [editTitle, setEditTitle] = useState("");
   const [editUrl, setEditUrl] = useState("");
   const [editDifficulty, setEditDifficulty] = useState("easy");
@@ -61,10 +62,24 @@ function ProblemsList() {
   function startTopicsEdit(problem: Problem) {
     setError(null);
     setEditingTopicsId(problem.id);
+    setDraftTopicIds(new Set(problem.topics.map((t) => t.id)));
   }
 
   function cancelTopicsEdit() {
     setEditingTopicsId(null);
+    setDraftTopicIds(new Set());
+  }
+
+  function toggleDraftTopic(topicId: number) {
+    setDraftTopicIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(topicId)) {
+        next.delete(topicId);
+      } else {
+        next.add(topicId);
+      }
+      return next;
+    });
   }
 
   async function handleEditSubmit(e: React.FormEvent, problemId: number) {
@@ -88,19 +103,19 @@ function ProblemsList() {
     }
   }
 
-  async function handleAddTopic(problem: Problem, topic: Topic) {
+  async function handleTopicsSubmit(problem: Problem) {
     setError(null);
     try {
-      await apiFetch(
-        `/problems/${problem.id}/topics`,
-        { method: "POST" },
-        { topic_id: topic.id }
-      );
+      const updatedTopics = await apiFetch<Topic[]>(`/problems/${problem.id}/topics`, {
+        method: "PUT",
+        body: JSON.stringify([...draftTopicIds]),
+      });
+
       setProblems((prev) =>
-        prev.map((p) =>
-          p.id === problem.id ? { ...p, topics: [...p.topics, topic] } : p
-        )
+        prev.map((p) => (p.id === problem.id ? { ...p, topics: updatedTopics } : p))
       );
+      setEditingTopicsId(null);
+      setDraftTopicIds(new Set());
     } catch (err) {
       setError((err as Error).message);
     }
@@ -125,21 +140,20 @@ function ProblemsList() {
     }
 
     if (editingTopicsId === problem.id) {
-      const linkedIds = problem.topics.map((t) => t.id);
       return (
         <div>
           {allTopics.map((topic) => (
             <label key={topic.id}>
               <input
                 type="checkbox"
-                checked={linkedIds.includes(topic.id)}
-                disabled={linkedIds.includes(topic.id)}
-                onChange={() => handleAddTopic(problem, topic)}
+                checked={draftTopicIds.has(topic.id)}
+                onChange={() => toggleDraftTopic(topic.id)}
               />
               {topic.name}
             </label>
           ))}
-          <button type="button" onClick={cancelTopicsEdit}>Done</button>
+          <button type="button" onClick={() => handleTopicsSubmit(problem)}>Done</button>
+          <button type="button" onClick={cancelTopicsEdit}>Cancel</button>
           {error && <p style={{ color: "red" }}>{error}</p>}
         </div>
       );
