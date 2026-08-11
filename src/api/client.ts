@@ -26,23 +26,29 @@ export async function apiFetch<T>(
 
   const response = await fetch(url.toString(), { ...options, headers });
 
-  if (!response.ok) {
-  const errorBody = await response.json().catch(() => null);
-  let message = `Request failed: ${response.status}`;
-
-  if (errorBody?.detail) {
-    if (typeof errorBody.detail === "string") {
-      message = errorBody.detail;
-    } else if (Array.isArray(errorBody.detail)) {
-      message = errorBody.detail.map((e: { msg: string }) => e.msg).join(", ");
-    }
+  if (response.status === 401) {
+    localStorage.removeItem("token");
+    window.location.href = "/login";
+    throw new Error("Session expired. Redirecting to login.");
   }
 
-  throw new Error(message);
-}
+  if (!response.ok) {
+    const errorBody = await response.json().catch(() => null);
+    let message = `Request failed: ${response.status}`;
+
+    if (errorBody?.detail) {
+      if (typeof errorBody.detail === "string") {
+        message = errorBody.detail;
+      } else if (Array.isArray(errorBody.detail)) {
+        message = errorBody.detail.map((e: { msg: string }) => e.msg).join(", ");
+      }
+    }
+
+    throw new Error(message);
+  }
 
   if (response.status === 204) {
-  return undefined as T;
+    return undefined as T;
   }
 
   return response.json();
