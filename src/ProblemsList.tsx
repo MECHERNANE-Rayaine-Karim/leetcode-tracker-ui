@@ -1,5 +1,9 @@
+import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { apiFetch } from "./api/client";
+
+
+
 
 interface Topic {
   id: number;
@@ -15,6 +19,7 @@ interface Problem {
 }
 
 function ProblemsList() {
+  const navigate = useNavigate();
   const [problems, setProblems] = useState<Problem[]>([]);
   const [allTopics, setAllTopics] = useState<Topic[]>([]);
   const [loading, setLoading] = useState(true);
@@ -121,6 +126,10 @@ function ProblemsList() {
     }
   }
 
+  function addProblem(){
+    navigate("/problems/add");
+  }
+
   function renderRow(problem: Problem) {
     if (editingId === problem.id) {
       return (
@@ -176,6 +185,7 @@ function ProblemsList() {
       {problems.map((problem) => (
         <li key={problem.id}>{renderRow(problem)}</li>
       ))}
+      <button type="button" onClick={addProblem}>add problem</button>
     </ul>
   );
 }

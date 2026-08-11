@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { apiFetch } from "./api/client";
+import {useNavigate} from "react-router-dom";
 
 
 function RegisterForm() {
+    const navigate = useNavigate();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [email, setEmail] = useState("");
@@ -23,13 +25,18 @@ function RegisterForm() {
             });
             localStorage.setItem("token", token);
             setLoggedIn(true);
+            setTimeout(() => navigate("/problems"), 1000);
         }  catch (err) {
         setError((err as Error).message);
     }
   }
 
+  function login(){
+        navigate("/login");
+  }
+
   if (loggedIn) {
-        return <p>Registered in successfully!</p>;
+        return <p>Registered successfully!</p>;
   }
 
   return (
@@ -53,7 +60,7 @@ function RegisterForm() {
         onChange={(e) => setEmail(e.target.value)}
       />
       <button type="submit">Register</button>
-
+      <button type="button" onClick={login}>log in</button>
       {error && <p style={{ color: "red" }}>{error}</p>}
     </form>
   );

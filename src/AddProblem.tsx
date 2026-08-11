@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { apiFetch } from "./api/client";
 
@@ -7,6 +8,7 @@ interface Topic {
 }
 
 function AddProblem() {
+  const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [url, setUrl] = useState("");
   const [difficulty, setDifficulty] = useState("easy");
@@ -40,6 +42,7 @@ function AddProblem() {
         { topic_ids: selectedTopicIds }
       );
       setSuccess(true);
+      setTimeout(() => navigate("/problems"), 1000);
     } catch (err) {
       setError((err as Error).message);
     }

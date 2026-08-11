@@ -1,7 +1,9 @@
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { apiFetch } from "./api/client";
 
 function LoginForm() {
+  const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -17,9 +19,14 @@ function LoginForm() {
       });
       localStorage.setItem("token", token);
       setLoggedIn(true);
+      setTimeout(() => navigate("/problems"), 1000);
     } catch (err) {
       setError((err as Error).message);
     }
+  }
+
+  function register(){
+     navigate("/register");
   }
 
   if (loggedIn) {
@@ -41,6 +48,7 @@ function LoginForm() {
         onChange={(e) => setPassword(e.target.value)}
       />
       <button type="submit">Log In</button>
+      <button type="button" onClick={register}>register</button>
       {error && <p style={{ color: "red" }}>{error}</p>}
     </form>
   );
