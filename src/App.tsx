@@ -4,6 +4,7 @@ import RegisterForm from "./RegisterForm";
 import ProblemsList from "./ProblemsList";
 import AddProblem from "./AddProblem";
 import ProtectedRoute from "./ProtectedRoute";
+import AttemptsList from "./AttemptsList";
 
 function App() {
   return (
@@ -27,6 +28,14 @@ function App() {
               <AddProblem />
             </ProtectedRoute>
           }
+        />
+        <Route
+            path="/problems/:problemId/attempts"
+              element={
+                <ProtectedRoute>
+                    <AttemptsList />
+                </ProtectedRoute>
+            }
         />
       </Routes>
     </BrowserRouter>

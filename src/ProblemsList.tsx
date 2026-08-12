@@ -130,6 +130,10 @@ function ProblemsList() {
     navigate("/problems/add");
   }
 
+  function showAttempts(problemId:number){
+    navigate(`/problems/${problemId}/attempts`);
+  }
+
   function renderRow(problem: Problem) {
     if (editingId === problem.id) {
       return (
@@ -174,6 +178,7 @@ function ProblemsList() {
         <button type="button" onClick={() => startEdit(problem)}>Edit</button>
         <button type="button" onClick={() => handleDelete(problem.id)}>Delete</button>
         <button type="button" onClick={() => startTopicsEdit(problem)}>Edit Topics</button>
+        <button type="button" onClick={() => showAttempts(problem.id)}>Attempts</button>
       </>
     );
   }
