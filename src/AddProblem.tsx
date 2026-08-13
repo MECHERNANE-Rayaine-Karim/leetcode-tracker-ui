@@ -16,6 +16,10 @@ function AddProblem() {
   const [selectedTopicIds, setSelectedTopicIds] = useState<number[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const isFormValid =
+      title.trim() !== "" &&
+      difficulty !== "" &&
+      url.trim() !== "";
 
   useEffect(() => {
     apiFetch<Topic[]>("/topics")
@@ -52,9 +56,9 @@ function AddProblem() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <input type="text" placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
-      <input type="text" placeholder="URL" value={url} onChange={(e) => setUrl(e.target.value)} />
-      <select value={difficulty} onChange={(e) => setDifficulty(e.target.value)}>
+      <input type="text" placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} required/>
+      <input type="text" placeholder="URL" value={url} onChange={(e) => setUrl(e.target.value)} required/>
+      <select value={difficulty} onChange={(e) => setDifficulty(e.target.value)} required>
         <option value="easy">Easy</option>
         <option value="medium">Medium</option>
         <option value="hard">Hard</option>
@@ -74,7 +78,7 @@ function AddProblem() {
         ))}
       </fieldset>
 
-      <button type="submit">Add Problem</button>
+      <button type="submit" disabled={!isFormValid}>Add Problem</button>
       {error && <p style={{ color: "red" }}>{error}</p>}
     </form>
   );
