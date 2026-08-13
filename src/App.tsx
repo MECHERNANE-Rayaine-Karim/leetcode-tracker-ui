@@ -5,6 +5,7 @@ import ProblemsList from "./ProblemsList";
 import AddProblem from "./AddProblem";
 import ProtectedRoute from "./ProtectedRoute";
 import AttemptsList from "./AttemptsList";
+import AddAttempt from "./AddAttempt";
 
 function App() {
   return (
@@ -34,6 +35,14 @@ function App() {
               element={
                 <ProtectedRoute>
                     <AttemptsList />
+                </ProtectedRoute>
+            }
+        />
+        <Route
+            path="/problems/:problemId/attempts/add"
+              element={
+                <ProtectedRoute>
+                    <AddAttempt />
                 </ProtectedRoute>
             }
         />

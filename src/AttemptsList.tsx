@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { apiFetch } from "./api/client";
 
@@ -14,7 +14,7 @@ interface Attempt {
 }
 
 function AttemptsList() {
-
+  const navigate = useNavigate();
   const { problemId } = useParams();
   const [attempts, setAttempts] = useState<Attempt[]>([]);
   const [detailedAttempt, setDetailedAttempt] = useState<Attempt | null>(null);
@@ -56,6 +56,9 @@ function AttemptsList() {
       setError((err as Error).message);
     }
   }
+  function addAttempt(){
+      navigate(`/problems/${problemId}/attempts/add`);
+  }
 
   function renderRow(attempt: Attempt) {
     if (detailsId === attempt.id) {
@@ -75,18 +78,20 @@ function AttemptsList() {
         {attempt.space_complexity} — {attempt.time_complexity}
         <button type="button" onClick={() => handleDelete(attempt.id)}>Delete</button>
         <button type="button" onClick={() => handleDetails(attempt.id)}>Details</button>
-      </>
+        </>
     );
   }
 
   if (loading) return <p>Loading...</p>;
   return (
-    <ul>
-      {attempts.map((attempt) => (
-        <li key={attempt.id}>{renderRow(attempt)}</li>
-      ))}
-      <button type="button" onClick={() => {}}>Add</button>
-    </ul>
+    <>
+      <ul>
+        {attempts.map((attempt) => (
+          <li key={attempt.id}>{renderRow(attempt)}</li>
+        ))}
+      </ul>
+      <button type="button" onClick={addAttempt}>Add</button>
+    </>
   );
 }
 
