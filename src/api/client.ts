@@ -40,7 +40,12 @@ export async function apiFetch<T>(
       if (typeof errorBody.detail === "string") {
         message = errorBody.detail;
       } else if (Array.isArray(errorBody.detail)) {
-        message = errorBody.detail.map((e: { msg: string }) => e.msg).join(", ");
+        message = errorBody.detail
+          .map((e: { loc?: (string | number)[]; msg: string }) => {
+            const field = e.loc?.[e.loc.length - 1];
+            return field ? `${field}: ${e.msg}` : e.msg;
+          })
+          .join(", ");
       }
     }
 
