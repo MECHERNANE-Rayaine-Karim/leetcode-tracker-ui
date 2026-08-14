@@ -59,6 +59,9 @@ function AttemptsList() {
   function addAttempt(){
       navigate(`/problems/${problemId}/attempts/add`);
   }
+  function notes(attemptId: number){
+      navigate(`/problems/${problemId}/attempts/${attemptId}/notes`);
+  }
 
   function renderRow(attempt: Attempt) {
     if (detailsId === attempt.id) {
@@ -78,7 +81,8 @@ function AttemptsList() {
         {attempt.space_complexity} — {attempt.time_complexity}
         <button type="button" onClick={() => handleDelete(attempt.id)}>Delete</button>
         <button type="button" onClick={() => handleDetails(attempt.id)}>Details</button>
-        </>
+        <button type="button" onClick={() => notes(attempt.id)}>Notes</button>
+      </>
     );
   }
 
