@@ -8,6 +8,7 @@ import AttemptsList from "./AttemptsList";
 import AddAttempt from "./AddAttempt";
 import NotesList from "./NotesList";
 import AddNote from "./AddNote";
+import Stats from "./Stats";
 
 function App() {
   return (
@@ -61,6 +62,14 @@ function App() {
               element={
                 <ProtectedRoute>
                     <AddNote />
+                </ProtectedRoute>
+            }
+        />
+        <Route
+            path="/stats"
+              element={
+                <ProtectedRoute>
+                    <Stats/>
                 </ProtectedRoute>
             }
         />

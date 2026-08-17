@@ -133,6 +133,9 @@ function ProblemsList() {
   function showAttempts(problemId:number){
     navigate(`/problems/${problemId}/attempts`);
   }
+  function stats(){
+    navigate("/stats");
+  }
 
   function renderRow(problem: Problem) {
     if (editingId === problem.id) {
@@ -191,6 +194,7 @@ function ProblemsList() {
         <li key={problem.id}>{renderRow(problem)}</li>
       ))}
       <button type="button" onClick={addProblem}>add problem</button>
+      <button type="button" onClick={stats}>stats</button>
     </ul>
   );
 }
