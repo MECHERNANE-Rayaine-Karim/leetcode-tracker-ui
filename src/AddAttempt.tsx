@@ -57,7 +57,14 @@ function AddAttempt(){
     return(
 
         <form onSubmit={handleSubmit}>
-          <input type="text" placeholder="code" value={codeSource} onChange={(e) => setCodeSource(e.target.value)} required/>
+          <textarea
+              placeholder="code"
+              value={codeSource}
+              onChange={(e) => setCodeSource(e.target.value)}
+              rows={12}
+              required
+              style={{ fontFamily: "monospace", width: "100%" }}
+          />
           <select value={usedLanguage} onChange={(e) => setUsedLanguage(e.target.value)} required>
               <option value="">Select language</option>
               <option value="Python">Python</option>

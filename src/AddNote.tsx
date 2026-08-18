@@ -35,8 +35,14 @@ function AddNote(){
 
     return (
         <form onSubmit={handleSubmit}>
-          <input type="text" placeholder="Title" value={content} onChange={(e) => setContent(e.target.value)} required/>
-
+          <textarea
+              placeholder="content"
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              rows={12}
+              required
+              style={{ width: "100%" }}
+          />
           <button type="submit" disabled={!isFormValid}>Add Note</button>
           {error && <p style={{ color: "red" }}>{error}</p>}
         </form>

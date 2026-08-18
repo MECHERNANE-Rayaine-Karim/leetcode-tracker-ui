@@ -67,7 +67,9 @@ function AttemptsList() {
     if (detailsId === attempt.id) {
       return (
         <>
-          {detailedAttempt?.code_source}
+          <pre style={{ whiteSpace: "pre-wrap", fontFamily: "monospace" , textAlign: "left" }}>
+            {detailedAttempt?.code_source}
+          </pre>
           <button type="button" onClick={cancel}>Cancel</button>
           {error && <p style={{ color: "red" }}>{error}</p>}
         </>

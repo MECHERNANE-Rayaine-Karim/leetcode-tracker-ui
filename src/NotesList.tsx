@@ -17,6 +17,7 @@ function  NotesList(){
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [detailsId, setDetailsId] = useState<number | null>(null);
   const [editingId, setEditingId] = useState<number | null>(null);
 
   useEffect(() => {
@@ -64,6 +65,13 @@ function  NotesList(){
       }
   }
 
+  function handleDetails(noteId: number) {
+    setDetailsId(noteId);
+  }
+  function cancelDetails() {
+    setDetailsId(null);
+  }
+
 
 
 
@@ -77,19 +85,34 @@ function  NotesList(){
      if( note.id == editingId){
        return (
            <form onSubmit={(e) => handleEditSubmit(e, note.id)}>
-            <input type="text" value={content} onChange={(e) => setContent(e.target.value)} required />
+            <textarea
+              placeholder="content"
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              rows={12}
+              required
+              style={{ width: "100%" }}
+            />
             <button type="submit">Save</button>
             <button type="button" onClick={cancelEdit}>Cancel</button>
             {error && <p style={{ color: "red" }}>{error}</p>}
           </form>
        );
-
      }
-
+     if( note.id == detailsId){
+         return (
+             <>
+                 <pre style={{ whiteSpace: "pre-wrap", fontFamily: "monospace" , textAlign: "left" }}>
+                    {note.content}
+                 </pre>
+                 <button type="button" onClick={() => cancelDetails() }>Cancel</button>
+             </>
+         );
+     }
       return (
         <>
             {note.id} — {note.written_at}
-            {note.content}
+            <button type="button" onClick={() => handleDetails(note.id) }>Details</button>
             <button type="button" onClick={() => handleDelete(note.id) }>Delete</button>
             <button type="button" onClick={() => startEdit(note)}>Edit</button>
         </>
