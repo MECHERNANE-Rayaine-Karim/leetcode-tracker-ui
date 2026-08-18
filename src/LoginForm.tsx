@@ -47,7 +47,7 @@ function LoginForm() {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-      <button type="submit">Log In</button>
+      <button type="submit">login</button>
       <button type="button" onClick={register}>register</button>
       {error && <p style={{ color: "red" }}>{error}</p>}
     </form>
